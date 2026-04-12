@@ -45,6 +45,10 @@ export class EmployeeList implements OnInit {
     this.addForm.reset();
   }
 
+  selectedAddPhotoFile: File | null = null;
+  isUploadingAddPhoto = false;
+  addPhotoPreview = '';
+
   closeAddModal(): void {
     this.showAddModal = false;
   }
@@ -96,14 +100,46 @@ export class EmployeeList implements OnInit {
       designation: formValue.designation,
       gender: formValue.gender,
       salary: Number(formValue.salary),
+      date_of_joining: formValue.date_of_joining,
     };
 
+    this.isUploadingAddPhoto = true;
+
     this.employeeService.addEmployee(newEmployee).subscribe({
-      next: () => {
-        this.closeAddModal();
-        this.loadEmployees();
+      next: (result: any) => {
+        const createdEmployeeId = result?.data?.createEmployee?._id;
+
+        if (!createdEmployeeId) {
+          this.isUploadingAddPhoto = false;
+          alert('Employee created, but no ID was returned');
+          return;
+        }
+
+        if (this.selectedAddPhotoFile) {
+          this.employeeService
+            .uploadEmployeePhoto(createdEmployeeId, this.selectedAddPhotoFile)
+            .subscribe({
+              next: () => {
+                this.isUploadingAddPhoto = false;
+                this.closeAddModal();
+                this.loadEmployees();
+              },
+              error: (error) => {
+                this.isUploadingAddPhoto = false;
+                console.error('Photo upload failed:', error);
+                alert('Employee was created, but photo upload failed');
+                this.closeAddModal();
+                this.loadEmployees();
+              },
+            });
+        } else {
+          this.isUploadingAddPhoto = false;
+          this.closeAddModal();
+          this.loadEmployees();
+        }
       },
       error: (error) => {
+        this.isUploadingAddPhoto = false;
         console.error('Error adding employee:', error);
         alert('Failed to add employee');
       },
@@ -125,5 +161,18 @@ export class EmployeeList implements OnInit {
         alert('Failed to delete employee');
       },
     });
+  }
+
+  onAddPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+
+    this.selectedAddPhotoFile = file;
+
+    if (file) {
+      this.addPhotoPreview = URL.createObjectURL(file);
+    } else {
+      this.addPhotoPreview = '';
+    }
   }
 }

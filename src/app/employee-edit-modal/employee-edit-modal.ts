@@ -22,6 +22,9 @@ export class EmployeeEditModal implements OnChanges {
   private fb = inject(FormBuilder);
   private employeeService = inject(EmployeeService);
 
+  selectedPhotoFile: File | null = null;
+  photoPreview = '';
+
   @Input() employee: any = null;
   @Input() isOpen = false;
 
@@ -55,6 +58,8 @@ export class EmployeeEditModal implements OnChanges {
         date_of_joining: this.formatDateForInput(this.employee.date_of_joining),
       });
 
+      this.photoPreview = this.employee.employee_photo ?? '';
+      this.selectedPhotoFile = null;
       this.errorMessage = '';
     }
 
@@ -62,6 +67,19 @@ export class EmployeeEditModal implements OnChanges {
       this.editForm.reset();
       this.errorMessage = '';
       this.isSaving = false;
+    }
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+
+    this.selectedPhotoFile = file;
+
+    if (file) {
+      this.photoPreview = URL.createObjectURL(file);
+    } else {
+      this.photoPreview = this.employee?.employee_photo ?? '';
     }
   }
 
@@ -96,10 +114,29 @@ export class EmployeeEditModal implements OnChanges {
       date_of_joining: formValue.date_of_joining,
     };
 
+    const finalize = () => {
+      this.isSaving = false;
+      this.saved.emit(); // 🔥 THIS closes the modal
+    };
+
+    // Step 1: update employee fields
     this.employeeService.updateEmployee(this.employee._id, updatedEmployee).subscribe({
       next: () => {
-        this.isSaving = false;
-        this.saved.emit();
+        // Step 2: if photo exists, upload it
+        if (this.selectedPhotoFile) {
+          this.employeeService
+            .uploadEmployeePhoto(this.employee._id, this.selectedPhotoFile)
+            .subscribe({
+              next: () => finalize(),
+              error: (error) => {
+                console.error('Photo upload failed:', error);
+                this.errorMessage = 'Photo upload failed';
+                this.isSaving = false;
+              },
+            });
+        } else {
+          finalize();
+        }
       },
       error: (error) => {
         console.error('Error updating employee:', error);

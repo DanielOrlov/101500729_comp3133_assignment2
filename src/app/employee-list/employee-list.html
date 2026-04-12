@@ -20,6 +20,7 @@
       <table class="table table-striped table-hover align-middle">
         <thead class="table-dark">
           <tr>
+            <th class="text-center">Photo</th>
             <th class="text-center">Name</th>
             <th class="text-center">Email</th>
             <th class="text-center">Department</th>
@@ -30,6 +31,17 @@
 
         <tbody>
           <tr *ngFor="let emp of employees">
+            <td>
+              <img
+                *ngIf="emp.employee_photo"
+                [src]="emp.employee_photo"
+                alt="Employee Photo"
+                width="50"
+                height="50"
+                class="rounded-circle object-fit-cover"
+              />
+              <span *ngIf="!emp.employee_photo">—</span>
+            </td>
             <td>{{ emp.first_name }} {{ emp.last_name }}</td>
             <td>{{ emp.email }}</td>
             <td>{{ emp.department }}</td>
@@ -68,6 +80,24 @@
       </div>
 
       <form [formGroup]="addForm" (ngSubmit)="saveNewEmployee()">
+        <div class="col-md-12">
+          <label class="form-label">Profile Photo</label>
+          <input
+            type="file"
+            class="form-control"
+            accept="image/*"
+            (change)="onAddPhotoSelected($event)"
+          />
+        </div>
+
+        <div class="col-md-12" *ngIf="addPhotoPreview">
+          <img
+            [src]="addPhotoPreview"
+            alt="Preview"
+            class="img-thumbnail mt-2"
+            style="max-height: 180px"
+          />
+        </div>
         <div class="modal-body">
           <div class="row g-3">
             <div class="col-md-6">

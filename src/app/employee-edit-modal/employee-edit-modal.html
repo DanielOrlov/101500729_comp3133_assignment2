@@ -12,6 +12,25 @@
       </div>
 
       <form [formGroup]="editForm" (ngSubmit)="saveChanges()">
+        <div class="col-md-12">
+          <label class="form-label">Profile Photo</label>
+          <input
+            type="file"
+            class="form-control"
+            accept="image/*"
+            (change)="onPhotoSelected($event)"
+          />
+        </div>
+
+        <div class="col-md-12" *ngIf="photoPreview">
+          <img
+            [src]="photoPreview"
+            alt="Preview"
+            class="img-thumbnail mt-2"
+            style="max-height: 180px"
+          />
+        </div>
+
         <div class="modal-body">
           <div *ngIf="errorMessage" class="alert alert-danger">
             {{ errorMessage }}

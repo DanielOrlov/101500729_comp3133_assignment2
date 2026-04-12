@@ -1,11 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmployeeService {
   private apollo = inject(Apollo);
+  private http = inject(HttpClient);
 
   getEmployees() {
     console.log('Calling getEmployees query');
@@ -195,5 +197,14 @@ export class EmployeeService {
       `,
       variables: { id },
     });
+  }
+  uploadEmployeePhoto(employeeId: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<{
+      message: string;
+      employee: any;
+    }>(`http://localhost:4000/api/employees/${employeeId}/photo`, formData);
   }
 }
