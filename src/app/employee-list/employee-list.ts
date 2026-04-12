@@ -170,4 +170,21 @@ export class EmployeeList implements OnInit {
       },
     });
   }
+
+  deleteEmployee(id: string, name: string): void {
+    const confirmed = window.confirm(`Are you sure you want to delete ${name}?`);
+
+    if (!confirmed) return;
+
+    this.employeeService.deleteEmployee(id).subscribe({
+      next: (result) => {
+        console.log('Employee deleted successfully:', result);
+        this.loadEmployees();
+      },
+      error: (error) => {
+        console.error('Error deleting employee:', error);
+        alert('Failed to delete employee');
+      },
+    });
+  }
 }

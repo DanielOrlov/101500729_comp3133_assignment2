@@ -175,4 +175,25 @@ export class EmployeeService {
       },
     });
   }
+
+  deleteEmployee(id: string) {
+    return this.apollo.mutate<{
+      deleteEmployee: {
+        _id: string;
+        first_name: string;
+        last_name: string;
+      } | null;
+    }>({
+      mutation: gql`
+        mutation DeleteEmployee($id: ID!) {
+          deleteEmployee(id: $id) {
+            _id
+            first_name
+            last_name
+          }
+        }
+      `,
+      variables: { id },
+    });
+  }
 }
