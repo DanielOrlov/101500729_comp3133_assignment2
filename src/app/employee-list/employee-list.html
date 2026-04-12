@@ -1,21 +1,47 @@
-<h2>Employee List</h2>
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Employee List</h2>
 
-<table border="1" cellpadding="8">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Department</th>
-      <th>Position</th>
-    </tr>
-  </thead>
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2">Loading employees...</p>
+  </div>
 
-  <tbody>
-    <tr *ngFor="let emp of employees">
-      <td>{{ emp.first_name }} {{ emp.last_name }}</td>
-      <td>{{ emp.email }}</td>
-      <td>{{ emp.department }}</td>
-      <td>{{ emp.position }}</td>
-    </tr>
-  </tbody>
-</table>
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="alert alert-danger text-center">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="!loading && !errorMessage" class="card shadow">
+    <div class="card-body">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th class="text-center">Name</th>
+            <th class="text-center">Email</th>
+            <th class="text-center">Department</th>
+            <th class="text-center">Designation</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let emp of employees">
+            <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+            <td>{{ emp.email }}</td>
+            <td>{{ emp.department }}</td>
+            <td>{{ emp.designation }}</td>
+            <td>
+              <div class="d-flex gap-2">
+                <button class="btn btn-primary btn-sm">View</button>
+                <button class="btn btn-warning btn-sm">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

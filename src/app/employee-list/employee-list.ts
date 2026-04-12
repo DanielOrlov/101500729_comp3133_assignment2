@@ -1,30 +1,35 @@
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
+import { EmployeeService } from '../services/employee';
 
 @Component({
   selector: 'app-employee-list',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './employee-list.html',
   styleUrl: './employee-list.css',
 })
-export class EmployeeList {
-  employees = [
-    {
-      _id: '1',
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john@example.com',
-      department: 'IT',
-      position: 'Developer',
-    },
-    {
-      _id: '2',
-      first_name: 'Jane',
-      last_name: 'Smith',
-      email: 'jane@example.com',
-      department: 'HR',
-      position: 'Manager',
-    },
-  ];
+export class EmployeeList implements OnInit {
+  private employeeService = inject(EmployeeService);
+
+  employees: any[] = [];
+  loading = true;
+  errorMessage = '';
+
+  ngOnInit(): void {
+    console.log('EmployeeListComponent initialized');
+
+    this.employeeService.getEmployees().subscribe({
+      next: (result: any) => {
+        console.log('GraphQL result:', result);
+        this.employees = result?.data?.employees ?? [];
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('GraphQL error:', error);
+        this.errorMessage = 'Failed to load employees';
+        this.loading = false;
+      },
+    });
+  }
 }

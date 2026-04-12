@@ -24,17 +24,11 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
+            "styles": ["node_modules/bootstrap/dist/css/bootstrap.min.css", "src/styles.css"],
             "security": {
               "allowedHosts": []
             },
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "polyfills": ["zone.js"]
           },
           "configurations": {
             "production": {
