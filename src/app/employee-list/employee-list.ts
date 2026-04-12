@@ -4,11 +4,12 @@ import { EmployeeService } from '../services/employee';
 import { RouterLink } from '@angular/router';
 import { Router } from 'express';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmployeeEditModal } from '../employee-edit-modal/employee-edit-modal';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, EmployeeEditModal],
   templateUrl: './employee-list.html',
   styleUrl: './employee-list.css',
 })
@@ -18,18 +19,7 @@ export class EmployeeList implements OnInit {
 
   showEditModal = false;
   showAddModal = false;
-  selectedEmployeeId = '';
-
-  editForm: FormGroup = this.fb.group({
-    first_name: ['', Validators.required],
-    last_name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    department: ['', Validators.required],
-    designation: ['', Validators.required],
-    salary: ['', Validators.required],
-    gender: ['', Validators.required],
-    date_of_joining: ['', Validators.required],
-  });
+  selectedEmployee: any = null;
 
   addForm: FormGroup = this.fb.group({
     first_name: ['', Validators.required],
@@ -60,37 +50,18 @@ export class EmployeeList implements OnInit {
   }
 
   openEditModal(emp: any): void {
-    this.selectedEmployeeId = emp._id;
+    this.selectedEmployee = emp;
     this.showEditModal = true;
+  }
 
-    this.editForm.patchValue({
-      first_name: emp.first_name,
-      last_name: emp.last_name,
-      email: emp.email,
-      department: emp.department,
-      designation: emp.designation,
-      salary: emp.salary,
-      gender: emp.gender,
-      date_of_joining: this.formatDateForInput(emp.date_of_joining),
-    });
+  onEmployeeUpdated(): void {
+    this.closeEditModal();
+    this.loadEmployees();
   }
 
   closeEditModal(): void {
     this.showEditModal = false;
-    this.selectedEmployeeId = '';
-    this.editForm.reset();
-  }
-
-  formatDateForInput(dateValue: string): string {
-    if (!dateValue) return '';
-
-    const date = new Date(dateValue);
-
-    if (isNaN(date.getTime())) {
-      return dateValue;
-    }
-
-    return date.toISOString().split('T')[0];
+    this.selectedEmployee = null;
   }
 
   loadEmployees(): void {
@@ -135,38 +106,6 @@ export class EmployeeList implements OnInit {
       error: (error) => {
         console.error('Error adding employee:', error);
         alert('Failed to add employee');
-      },
-    });
-  }
-
-  saveEmployeeChanges(): void {
-    if (this.editForm.invalid || !this.selectedEmployeeId) {
-      this.editForm.markAllAsTouched();
-      return;
-    }
-
-    const formValue = this.editForm.value;
-
-    const updatedEmployee = {
-      first_name: formValue.first_name,
-      last_name: formValue.last_name,
-      email: formValue.email,
-      department: formValue.department,
-      designation: formValue.designation,
-      gender: formValue.gender,
-      salary: Number(formValue.salary),
-      date_of_joining: formValue.date_of_joining,
-    };
-
-    this.employeeService.updateEmployee(this.selectedEmployeeId, updatedEmployee).subscribe({
-      next: (result) => {
-        console.log('Employee updated successfully:', result);
-        this.closeEditModal();
-        this.loadEmployees();
-      },
-      error: (error) => {
-        console.error('Error updating employee:', error);
-        alert('Failed to update employee');
       },
     });
   }
