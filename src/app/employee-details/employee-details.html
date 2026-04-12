@@ -1,0 +1,42 @@
+<div class="container mt-4">
+  <a routerLink="/employees" class="btn btn-secondary mb-3">Back</a>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2">Loading employee details...</p>
+  </div>
+
+  <div *ngIf="!loading && errorMessage && !employee" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && employee" class="card shadow">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4 text-center mb-3">
+          <img
+            *ngIf="employee.employee_photo"
+            [src]="employee.employee_photo"
+            alt="Employee Photo"
+            class="img-fluid rounded"
+            style="max-height: 250px"
+          />
+
+          <div *ngIf="!employee.employee_photo" class="border rounded p-4">No Photo</div>
+        </div>
+
+        <div class="col-md-8">
+          <h2>{{ employee.first_name }} {{ employee.last_name }}</h2>
+          <hr />
+
+          <p><strong>Email:</strong> {{ employee.email }}</p>
+          <p><strong>Department:</strong> {{ employee.department }}</p>
+          <p><strong>Designation:</strong> {{ employee.designation }}</p>
+          <p><strong>Gender:</strong> {{ employee.gender }}</p>
+          <p><strong>Salary:</strong> {{ employee.salary }}</p>
+          <p><strong>Date of Joining:</strong> {{ employee.date_of_joining }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
