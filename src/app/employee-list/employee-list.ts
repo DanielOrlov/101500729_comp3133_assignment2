@@ -17,9 +17,21 @@ export class EmployeeList implements OnInit {
   private fb = inject(FormBuilder);
 
   showEditModal = false;
+  showAddModal = false;
   selectedEmployeeId = '';
 
   editForm: FormGroup = this.fb.group({
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    department: ['', Validators.required],
+    designation: ['', Validators.required],
+    salary: ['', Validators.required],
+    gender: ['', Validators.required],
+    date_of_joining: ['', Validators.required],
+  });
+
+  addForm: FormGroup = this.fb.group({
     first_name: ['', Validators.required],
     last_name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
@@ -36,6 +48,15 @@ export class EmployeeList implements OnInit {
 
   ngOnInit(): void {
     this.loadEmployees();
+  }
+
+  openAddModal(): void {
+    this.showAddModal = true;
+    this.addForm.reset();
+  }
+
+  closeAddModal(): void {
+    this.showAddModal = false;
   }
 
   openEditModal(emp: any): void {
@@ -88,6 +109,36 @@ export class EmployeeList implements OnInit {
     });
   }
 
+  saveNewEmployee(): void {
+    if (this.addForm.invalid) {
+      this.addForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.addForm.value;
+
+    const newEmployee = {
+      first_name: formValue.first_name,
+      last_name: formValue.last_name,
+      email: formValue.email,
+      department: formValue.department,
+      designation: formValue.designation,
+      gender: formValue.gender,
+      salary: Number(formValue.salary),
+    };
+
+    this.employeeService.addEmployee(newEmployee).subscribe({
+      next: () => {
+        this.closeAddModal();
+        this.loadEmployees();
+      },
+      error: (error) => {
+        console.error('Error adding employee:', error);
+        alert('Failed to add employee');
+      },
+    });
+  }
+
   saveEmployeeChanges(): void {
     if (this.editForm.invalid || !this.selectedEmployeeId) {
       this.editForm.markAllAsTouched();
@@ -104,6 +155,7 @@ export class EmployeeList implements OnInit {
       designation: formValue.designation,
       gender: formValue.gender,
       salary: Number(formValue.salary),
+      date_of_joining: formValue.date_of_joining,
     };
 
     this.employeeService.updateEmployee(this.selectedEmployeeId, updatedEmployee).subscribe({

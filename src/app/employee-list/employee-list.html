@@ -1,6 +1,8 @@
 <div class="container mt-4">
   <h2 class="mb-4 text-center">Employee List</h2>
 
+  <button class="btn btn-success" (click)="openAddModal()">+ Add Employee</button>
+
   <!-- Loading -->
   <div *ngIf="loading" class="text-center">
     <div class="spinner-border text-primary"></div>
@@ -44,6 +46,78 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="showAddModal"
+  class="modal fade show d-block"
+  style="background-color: rgba(0, 0, 0, 0.5)"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Employee</h5>
+        <button class="btn-close" (click)="closeAddModal()"></button>
+      </div>
+
+      <form [formGroup]="addForm" (ngSubmit)="saveNewEmployee()">
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label>First Name</label>
+              <input class="form-control" formControlName="first_name" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Last Name</label>
+              <input class="form-control" formControlName="last_name" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Email</label>
+              <input class="form-control" formControlName="email" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Department</label>
+              <input class="form-control" formControlName="department" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Designation</label>
+              <input class="form-control" formControlName="designation" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Salary</label>
+              <input type="number" class="form-control" formControlName="salary" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Gender</label>
+              <select class="form-select" formControlName="gender">
+                <option value="">Select</option>
+                <option>Male</option>
+                <option>Female</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label>Date of Joining</label>
+              <input type="date" class="form-control" formControlName="date_of_joining" />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="addForm.invalid">
+            Add Employee
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -106,12 +180,7 @@
 
             <div class="col-md-6">
               <label class="form-label">Date of Joining</label>
-              <input
-                [disabled]="true"
-                type="date"
-                class="form-control"
-                formControlName="date_of_joining"
-              />
+              <input type="date" class="form-control" formControlName="date_of_joining" />
             </div>
           </div>
         </div>

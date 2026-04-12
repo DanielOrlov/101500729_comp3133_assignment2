@@ -83,6 +83,39 @@ export class EmployeeService {
     }).valueChanges;
   }
 
+  addEmployee(employeeData: any) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation createEmployee(
+          $first_name: String!
+          $last_name: String!
+          $email: String!
+          $gender: String!
+          $designation: String!
+          $salary: Float!
+          $department: String!
+          $employee_photo: String
+        ) {
+          createEmployee(
+            first_name: $first_name
+            last_name: $last_name
+            email: $email
+            gender: $gender
+            designation: $designation
+            salary: $salary
+            department: $department
+            employee_photo: $employee_photo
+          ) {
+            _id
+            first_name
+            last_name
+          }
+        }
+      `,
+      variables: employeeData,
+    });
+  }
+
   updateEmployee(id: string, employeeData: any) {
     return this.apollo.mutate<{
       updateEmployee: {
@@ -95,6 +128,7 @@ export class EmployeeService {
         gender: string;
         salary: number;
         employee_photo?: string;
+        date_of_joining: string;
       };
     }>({
       mutation: gql`
@@ -108,6 +142,7 @@ export class EmployeeService {
           $salary: Float
           $department: String
           $employee_photo: String
+          $date_of_joining: String
         ) {
           updateEmployee(
             id: $id
@@ -119,6 +154,7 @@ export class EmployeeService {
             salary: $salary
             department: $department
             employee_photo: $employee_photo
+            date_of_joining: $date_of_joining
           ) {
             _id
             first_name
@@ -129,6 +165,7 @@ export class EmployeeService {
             gender
             salary
             employee_photo
+            date_of_joining
           }
         }
       `,
