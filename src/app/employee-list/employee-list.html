@@ -61,7 +61,7 @@
         <button type="button" class="btn-close" (click)="closeEditModal()"></button>
       </div>
 
-      <form [formGroup]="editForm">
+      <form [formGroup]="editForm" (ngSubmit)="saveEmployeeChanges()">
         <div class="modal-body">
           <div class="row g-3">
             <div class="col-md-6">
@@ -106,7 +106,12 @@
 
             <div class="col-md-6">
               <label class="form-label">Date of Joining</label>
-              <input type="text" class="form-control" formControlName="date_of_joining" />
+              <input
+                [disabled]="true"
+                type="date"
+                class="form-control"
+                formControlName="date_of_joining"
+              />
             </div>
           </div>
         </div>

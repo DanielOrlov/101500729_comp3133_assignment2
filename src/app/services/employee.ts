@@ -20,6 +20,9 @@ export class EmployeeService {
             email
             department
             designation
+            salary
+            gender
+            date_of_joining
             employee_photo
           }
         }
@@ -78,5 +81,61 @@ export class EmployeeService {
       variables: { employeeId },
       fetchPolicy: 'no-cache',
     }).valueChanges;
+  }
+
+  updateEmployee(id: string, employeeData: any) {
+    return this.apollo.mutate<{
+      updateEmployee: {
+        _id: string;
+        first_name: string;
+        last_name: string;
+        email: string;
+        department: string;
+        designation: string;
+        gender: string;
+        salary: number;
+        employee_photo?: string;
+      };
+    }>({
+      mutation: gql`
+        mutation UpdateEmployee(
+          $id: ID!
+          $first_name: String
+          $last_name: String
+          $email: String
+          $gender: String
+          $designation: String
+          $salary: Float
+          $department: String
+          $employee_photo: String
+        ) {
+          updateEmployee(
+            id: $id
+            first_name: $first_name
+            last_name: $last_name
+            email: $email
+            gender: $gender
+            designation: $designation
+            salary: $salary
+            department: $department
+            employee_photo: $employee_photo
+          ) {
+            _id
+            first_name
+            last_name
+            email
+            department
+            designation
+            gender
+            salary
+            employee_photo
+          }
+        }
+      `,
+      variables: {
+        id,
+        ...employeeData,
+      },
+    });
   }
 }

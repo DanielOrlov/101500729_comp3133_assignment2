@@ -35,20 +35,7 @@ export class EmployeeList implements OnInit {
   errorMessage = '';
 
   ngOnInit(): void {
-    console.log('EmployeeListComponent initialized');
-
-    this.employeeService.getEmployees().subscribe({
-      next: (result: any) => {
-        console.log('GraphQL result:', result);
-        this.employees = result?.data?.employees ?? [];
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('GraphQL error:', error);
-        this.errorMessage = 'Failed to load employees';
-        this.loading = false;
-      },
-    });
+    this.loadEmployees();
   }
 
   openEditModal(emp: any): void {
@@ -63,7 +50,7 @@ export class EmployeeList implements OnInit {
       designation: emp.designation,
       salary: emp.salary,
       gender: emp.gender,
-      date_of_joining: emp.date_of_joining,
+      date_of_joining: this.formatDateForInput(emp.date_of_joining),
     });
   }
 
@@ -71,5 +58,64 @@ export class EmployeeList implements OnInit {
     this.showEditModal = false;
     this.selectedEmployeeId = '';
     this.editForm.reset();
+  }
+
+  formatDateForInput(dateValue: string): string {
+    if (!dateValue) return '';
+
+    const date = new Date(dateValue);
+
+    if (isNaN(date.getTime())) {
+      return dateValue;
+    }
+
+    return date.toISOString().split('T')[0];
+  }
+
+  loadEmployees(): void {
+    this.loading = true;
+
+    this.employeeService.getEmployees().subscribe({
+      next: (result: any) => {
+        this.employees = result?.data?.employees ?? [];
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching employees:', error);
+        this.errorMessage = 'Failed to load employees';
+        this.loading = false;
+      },
+    });
+  }
+
+  saveEmployeeChanges(): void {
+    if (this.editForm.invalid || !this.selectedEmployeeId) {
+      this.editForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.editForm.value;
+
+    const updatedEmployee = {
+      first_name: formValue.first_name,
+      last_name: formValue.last_name,
+      email: formValue.email,
+      department: formValue.department,
+      designation: formValue.designation,
+      gender: formValue.gender,
+      salary: Number(formValue.salary),
+    };
+
+    this.employeeService.updateEmployee(this.selectedEmployeeId, updatedEmployee).subscribe({
+      next: (result) => {
+        console.log('Employee updated successfully:', result);
+        this.closeEditModal();
+        this.loadEmployees();
+      },
+      error: (error) => {
+        console.error('Error updating employee:', error);
+        alert('Failed to update employee');
+      },
+    });
   }
 }

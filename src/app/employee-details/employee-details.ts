@@ -46,4 +46,8 @@ export class EmployeeDetails implements OnInit {
       },
     });
   }
+
+  salaryFormatter(salary: number): string {
+    return '$' + salary.toLocaleString();
+  }
 }
