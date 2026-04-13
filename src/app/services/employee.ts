@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { TokenService } from './token';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ import { environment } from '../../environments/environment';
 export class EmployeeService {
   private apollo = inject(Apollo);
   private http = inject(HttpClient);
+  private tokenService = inject(TokenService);
 
   getEmployees() {
     console.log('Calling getEmployees query');
@@ -34,19 +36,6 @@ export class EmployeeService {
       fetchPolicy: 'no-cache',
     }).valueChanges;
   }
-
-  // _id: ID!
-  //   first_name: String!
-  //   last_name: String!
-  //   email: String!
-  //   gender: String!
-  //   designation: String!
-  //   salary: Float!
-  //   date_of_joining: String!
-  //   department: String!
-  //   employee_photo: String
-  //   created_at: String
-  //   updated_at: String
 
   getEmployeeById(employeeId: string) {
     console.log('Calling getEmployeeById query');
@@ -203,10 +192,13 @@ export class EmployeeService {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post<{
-      message: string;
-      employee: any;
-    }>(`${environment.apiBaseUrl}/api/employees/${employeeId}/photo`, formData);
+    const token = this.tokenService.getToken();
+
+    return this.http.post(`${environment.apiBaseUrl}/api/employees/${employeeId}/photo`, formData, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : '',
+      },
+    });
   }
 
   searchEmployees(search: string) {
