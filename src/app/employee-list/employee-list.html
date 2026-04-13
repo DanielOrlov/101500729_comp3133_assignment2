@@ -1,5 +1,14 @@
 <div class="container mt-4">
-  <h2 class="mb-4 text-center">Employee List</h2>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1">Employee List</h2>
+      <p class="text-muted mb-0">
+        Logged in as <strong>{{ loggedInUsername }}</strong>
+      </p>
+    </div>
+
+    <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
+  </div>
 
   <button class="btn btn-success" (click)="openAddModal()">+ Add Employee</button>
 

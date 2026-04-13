@@ -1,8 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../services/employee';
-import { RouterLink } from '@angular/router';
-import { Router } from 'express';
+import { Router, RouterLink } from '@angular/router';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -11,6 +10,7 @@ import {
   FormsModule,
 } from '@angular/forms';
 import { EmployeeEditModal } from '../employee-edit-modal/employee-edit-modal';
+import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-employee-list',
@@ -22,6 +22,16 @@ import { EmployeeEditModal } from '../employee-edit-modal/employee-edit-modal';
 export class EmployeeList implements OnInit {
   private employeeService = inject(EmployeeService);
   private fb = inject(FormBuilder);
+
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  loggedInUsername = '';
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 
   showEditModal = false;
   showAddModal = false;
@@ -46,6 +56,7 @@ export class EmployeeList implements OnInit {
   errorMessage = '';
 
   ngOnInit(): void {
+    this.loggedInUsername = this.authService.getUsername();
     this.loadEmployees();
   }
 

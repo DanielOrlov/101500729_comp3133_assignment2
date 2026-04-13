@@ -1,0 +1,35 @@
+<div class="container mt-5" style="max-width: 450px">
+  <div class="card shadow">
+    <div class="card-body">
+      <h2 class="text-center mb-4">Sign Up</h2>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input class="form-control" formControlName="username" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input class="form-control" formControlName="email" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" formControlName="password" />
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Create Account</button>
+      </form>
+
+      <p class="text-center mt-3 mb-0">
+        Already have an account?
+        <a routerLink="/login">Login</a>
+      </p>
+    </div>
+  </div>
+</div>
