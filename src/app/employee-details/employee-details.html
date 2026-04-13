@@ -21,6 +21,10 @@
             class="img-fluid rounded"
             style="max-height: 250px"
           />
+          <div class="mt-2">
+            <button (click)="openEditModal()" class="btn btn-warning me-2">Edit</button>
+            <button (click)="deleteEmployee()" class="btn btn-danger">Delete</button>
+          </div>
 
           <div *ngIf="!employee.employee_photo" class="border rounded p-4">No Photo</div>
         </div>
@@ -40,3 +44,10 @@
     </div>
   </div>
 </div>
+
+<app-employee-edit-modal
+  [employee]="employee"
+  [isOpen]="showEditModal"
+  (closed)="closeEditModal()"
+  (saved)="onEmployeeUpdated()"
+></app-employee-edit-modal>
