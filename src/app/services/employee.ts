@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -205,7 +206,7 @@ export class EmployeeService {
     return this.http.post<{
       message: string;
       employee: any;
-    }>(`http://localhost:4000/api/employees/${employeeId}/photo`, formData);
+    }>(`${environment.apiBaseUrl}/api/employees/${employeeId}/photo`, formData);
   }
 
   searchEmployees(search: string) {

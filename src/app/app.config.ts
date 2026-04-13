@@ -13,6 +13,7 @@ import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
 import { TokenService } from './services/token';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -41,7 +42,7 @@ export const appConfig: ApplicationConfig = {
         link: ApolloLink.from([
           authLink,
           httpLink.create({
-            uri: 'http://localhost:4000/graphql',
+            uri: `${environment.apiBaseUrl}/graphql`,
           }),
         ]),
         cache: new InMemoryCache(),
