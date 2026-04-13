@@ -1,59 +1,36 @@
-# 101500729Comp3133Assignment2
+# Comp3133 - Full Stack
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.6.
+## Assignment 2 - building frontend using _Angular_ to interact with the Employee Management API from Assignment 1
 
-## Development server
+## Student name: Daniil Orlov <br> Student id: 101500729
 
-To start a local development server, run:
+### Vercel deployment:
 
-```bash
-ng serve
-```
+`https://101500729-comp3133-assignment2-b8lsumlz5-danielorlovs-projects.vercel.app`
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### How to run the project locally:
 
-## Code scaffolding
+For the instructions to run the backend, refer back to Assignment 1 README:<br> `https://github.com/DanielOrlov/COMP3133_101500729_Assignment1`
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. Download the project or clone this repo to your machine
+2. Run `npm i` to install all dependencies
+3. Start the server by running `ng serve`
+   - **_Note:_** you may need to go to the /src/environments/environments.ts and uncomment the API url you want to use
+   - If you want to run the backend locally, use `http://localhost:4000`
+   - If you want to connect the the Vercel deployment, user `https://comp-3133-101500729-assignment1.vercel.app`
+4. Open `http://localhost:4200` in your browser - you will be prompted to login or sign up
+   - you can use `admin` for both login and password
+5. Enjoy!
 
-```bash
-ng generate component component-name
-```
+### Implemented:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. Front end using Angular
+2. User Registration, Login, and Logout
+3. Graphic interface for the employee CRUD
+   - Employee List component
+   - Employee Details component
+   - Add employee modal
+   - Edit employee modal (please see submitted word document for clarifications)
+   - Upload employee profile picture (please see submitted word document for clarifications)
+   - Delete employee
+   - Search employee by Department and/or Designation
