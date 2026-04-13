@@ -207,4 +207,40 @@ export class EmployeeService {
       employee: any;
     }>(`http://localhost:4000/api/employees/${employeeId}/photo`, formData);
   }
+
+  searchEmployees(search: string) {
+    return this.apollo.watchQuery<{
+      findEmployeesByDesignationOrDepartment: {
+        _id: string;
+        first_name: string;
+        last_name: string;
+        email: string;
+        department: string;
+        designation: string;
+        gender: string;
+        salary: number;
+        date_of_joining: string;
+        employee_photo?: string;
+      }[];
+    }>({
+      query: gql`
+        query SearchEmployees($search: String) {
+          findEmployeesByDesignationOrDepartment(search: $search) {
+            _id
+            first_name
+            last_name
+            email
+            department
+            designation
+            gender
+            salary
+            date_of_joining
+            employee_photo
+          }
+        }
+      `,
+      variables: { search },
+      fetchPolicy: 'no-cache',
+    }).valueChanges;
+  }
 }

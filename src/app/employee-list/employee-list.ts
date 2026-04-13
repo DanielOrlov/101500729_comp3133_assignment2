@@ -3,13 +3,19 @@ import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../services/employee';
 import { RouterLink } from '@angular/router';
 import { Router } from 'express';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+} from '@angular/forms';
 import { EmployeeEditModal } from '../employee-edit-modal/employee-edit-modal';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, EmployeeEditModal],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, EmployeeEditModal, FormsModule],
   templateUrl: './employee-list.html',
   styleUrl: './employee-list.css',
 })
@@ -20,6 +26,9 @@ export class EmployeeList implements OnInit {
   showEditModal = false;
   showAddModal = false;
   selectedEmployee: any = null;
+
+  searchText = '';
+  isSearching = false;
 
   addForm: FormGroup = this.fb.group({
     first_name: ['', Validators.required],
@@ -174,5 +183,36 @@ export class EmployeeList implements OnInit {
     } else {
       this.addPhotoPreview = '';
     }
+  }
+
+  searchEmployees(): void {
+    const query = this.searchText.trim();
+
+    if (!query) {
+      this.loadEmployees();
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+    this.isSearching = true;
+
+    this.employeeService.searchEmployees(query).subscribe({
+      next: (result: any) => {
+        this.employees = result?.data?.findEmployeesByDesignationOrDepartment ?? [];
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error searching employees:', error);
+        this.errorMessage = 'Failed to search employees';
+        this.loading = false;
+      },
+    });
+  }
+
+  clearSearch(): void {
+    this.searchText = '';
+    this.isSearching = false;
+    this.loadEmployees();
   }
 }

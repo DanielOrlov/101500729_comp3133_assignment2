@@ -17,6 +17,22 @@
   <!-- Table -->
   <div *ngIf="!loading && !errorMessage" class="card shadow">
     <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-8">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search by department or designation"
+            [(ngModel)]="searchText"
+            (keyup.enter)="searchEmployees()"
+          />
+        </div>
+
+        <div class="col-md-4 d-flex gap-2">
+          <button class="btn btn-primary" (click)="searchEmployees()">Search</button>
+          <button class="btn btn-outline-secondary" (click)="clearSearch()">Clear</button>
+        </div>
+      </div>
       <table class="table table-striped table-hover align-middle">
         <thead class="table-dark">
           <tr>
@@ -63,6 +79,9 @@
           </tr>
         </tbody>
       </table>
+      <div *ngIf="!loading && !errorMessage && employees.length === 0" class="alert alert-info">
+        No employees found.
+      </div>
     </div>
   </div>
 </div>
